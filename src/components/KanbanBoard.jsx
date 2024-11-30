@@ -22,12 +22,15 @@ const KanbanBoard = ({ tickets, users }) => {
   // Group tickets by the selected option (status, user, or priority)
   const groupTickets = (tickets, criteria) => {
     if (criteria === "status") {
-      return tickets.reduce((acc, ticket) => {
-        acc[ticket.status] = acc[ticket.status] || [];
-        acc[ticket.status].push(ticket);
-        return acc;
-      }, {});
-    } else if (criteria === "user") {
+        // Initialize with all possible statuses
+        const allStatuses = { 'Backlog': [], 'Todo': [], "In progress": [], 'Done': [], 'Cancelled': [] };
+    
+        // Group tickets by status
+        return tickets.reduce((acc, ticket) => {
+          acc[ticket.status].push(ticket);
+          return acc;
+        }, allStatuses);
+      } else if (criteria === "user") {
       return tickets.reduce((acc, ticket) => {
         const user = users.find((user) => user.id === ticket.userId)?.name || "Unassigned";
         acc[user] = acc[user] || [];
@@ -36,7 +39,7 @@ const KanbanBoard = ({ tickets, users }) => {
       }, {});
     } else if (criteria === "priority") {
       return tickets.reduce((acc, ticket) => {
-        const priorityMap = ["No Priority", "Low", "Medium", "High", "Urgent"];
+        const priorityMap = ["Medium", "High", "Low", "Urgent", "No Priority"];
         const priority = priorityMap[ticket.priority] || "Unknown";
         acc[priority] = acc[priority] || [];
         acc[priority].push(ticket);
@@ -163,7 +166,7 @@ const KanbanBoard = ({ tickets, users }) => {
       {/* Render grouped and ordered tickets in columns */}
       <div className="kanban-board">
         {Object.keys(processedTickets).map((key) => (
-          <KanbanColumn key={key} title={key} tickets={processedTickets[key]} />
+          <KanbanColumn key={key} title={key} tickets={processedTickets[key]} grouping={grouping} ordering={ordering} />
         ))}
       </div>
     </div>
