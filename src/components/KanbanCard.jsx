@@ -4,7 +4,6 @@ import React from "react";
 const getAvatarUrl = (userId) => `https://www.example.com/avatars/${userId}.png`;
 
 const KanbanCard = ({ ticket }) => {
-  console.log(ticket)
   return (
     <div className="kanban-card" >
 
